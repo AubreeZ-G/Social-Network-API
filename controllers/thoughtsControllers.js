@@ -2,13 +2,13 @@ const { Thoughts, Users } = require('../models');
 
 module.exports = {
   // Get all thoughtss
-  getthoughtss(req, res) {
+  getThoughts(req, res) {
     Thoughts.find()
       .then((thoughts) => res.json(thoughts))
       .catch((err) => res.status(500).json(err));
   },
   // Get a thoughts
-  getSinglethoughts(req, res) {
+  getSingleThoughts(req, res) {
     Thoughts.findOne({ _id: req.params.thoughtsId })
       .select('-__v')
       .then((thoughts) =>
@@ -19,7 +19,7 @@ module.exports = {
       .catch((err) => res.status(500).json(err));
   },
   // Create a thoughts
-  createthoughts(req, res) {
+  createThoughts(req, res) {
     Thoughts.create(req.body)
       .then((thoughts) => res.json(thoughts))
       .catch((err) => {
@@ -28,7 +28,7 @@ module.exports = {
       });
   },
   // Delete a thoughts
-  deletethoughts(req, res) {
+  deleteThoughts(req, res) {
     Thoughts.findOneAndDelete({ _id: req.params.thoughtsId })
       .then((thoughts) =>
         !thoughts
@@ -39,8 +39,8 @@ module.exports = {
       .catch((err) => res.status(500).json(err));
   },
   // Update a thoughts
-  updatethoughts(req, res) {
-    thoughts.findOneAndUpdate(
+  updateThoughts(req, res) {
+    Thoughts.findOneAndUpdate(
       { _id: req.params.thoughtsId },
       { $set: req.body },
       { runValidators: true, new: true }
@@ -51,5 +51,39 @@ module.exports = {
           : res.json(thoughts)
       )
       .catch((err) => res.status(500).json(err));
+  },
+};
+addReactions(req, res) {
+  console.log('You are adding a reaction');
+  console.log(req.body);
+  Users.findOneAndUpdate(
+    { _id: req.params.UsersId },
+    { $addToSet: { reactions: req.body } },
+    { runValidators: true, new: true }
+  )
+    .then((Users) =>
+      !Users
+        ? res
+            .status(404)
+            .json({ message: 'No Users found with that ID :(' })
+        : res.json(Users)
+    )
+    .catch((err) => res.status(500).json(err));
+},
+// Remove assignment from a Users
+removeReactions(req, res) {
+  Users.findOneAndUpdate(
+    { _id: req.params.UsersId },
+    { $pull: { reactions: { reactionsId: req.params.reactionsId } } },
+    { runValidators: true, new: true }
+  )
+    .then((Users) =>
+      !Users
+        ? res
+            .status(404)
+            .json({ message: 'No Users found with that ID :(' })
+        : res.json(Users)
+    )
+    .catch((err) => res.status(500).json(err));
   },
 };

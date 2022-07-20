@@ -58,6 +58,7 @@ module.exports = {
   },
   // create a new User
   createUsers(req, res) {
+    console.log("USer",req.bod);
     Users.create(req.body)
       .then((Users) => res.json(Users))
       .catch((err) => res.status(500).json(err));
@@ -88,12 +89,12 @@ module.exports = {
   },
 
   // Add an reaction to a Users
-  addReactions(req, res) {
+  addFriends(req, res) {
     console.log('You are adding a reaction');
     console.log(req.body);
     Users.findOneAndUpdate(
       { _id: req.params.UsersId },
-      { $addToSet: { reactions: req.body } },
+      { $addToSet: { friends: req.params.friendsId } },
       { runValidators: true, new: true }
     )
       .then((Users) =>
@@ -106,10 +107,10 @@ module.exports = {
       .catch((err) => res.status(500).json(err));
   },
   // Remove assignment from a Users
-  removeReactions(req, res) {
+  removeFriends(req, res) {
     Users.findOneAndUpdate(
       { _id: req.params.UsersId },
-      { $pull: { reactions: { reactionsId: req.params.reactionsId } } },
+      { $pull: { friends: { friendsId: req.params.friendsId } } },
       { runValidators: true, new: true }
     )
       .then((Users) =>

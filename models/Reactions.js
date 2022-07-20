@@ -13,7 +13,7 @@ const reactionSchema = new Schema(
      
     },
     username: {
-      type: Stringr,
+      type: String,
       required: true,
      
     },
@@ -30,4 +30,4 @@ const reactionSchema = new Schema(
   }
 );
 
-module.exports = reactionsSchema;
+module.exports = reactionSchema;
